@@ -1,5 +1,6 @@
+-- Tabla Taco_Order
 CREATE TABLE IF NOT EXISTS Taco_Order (
-    id identity,
+    id IDENTITY PRIMARY KEY,
     delivery_name VARCHAR(50) NOT NULL,
     delivery_Street VARCHAR(50) NOT NULL,
     delivery_city VARCHAR(50) NOT NULL,
@@ -11,28 +12,29 @@ CREATE TABLE IF NOT EXISTS Taco_Order (
     placed_at TIMESTAMP NOT NULL
 );
 
+-- Tabla Taco
 CREATE TABLE IF NOT EXISTS Taco (
-    id IDENTITY,
+    id IDENTITY PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     taco_order BIGINT NOT NULL,
     taco_order_key BIGINT NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (taco_order) REFERENCES Taco_Order(id)
 );
 
-CREATE TIMESTAMP IF NOT EXISTS Ingredient_Ref (
+-- Tabla Ingredient
+CREATE TABLE IF NOT EXISTS Ingredient (
+    id VARCHAR(4) NOT NULL PRIMARY KEY,
+    name VARCHAR(25) NOT NULL,
+    type VARCHAR(10) NOT NULL
+);
+
+-- Tabla Ingredient_Ref
+CREATE TABLE IF NOT EXISTS Ingredient_Ref (
     ingredient VARCHAR(4) NOT NULL,
     taco BIGINT NOT NULL,
-    taco_key BIGINT NOT NULL
+    taco_key BIGINT NOT NULL,
+    PRIMARY KEY (ingredient, taco), -- Clave primaria compuesta
+    FOREIGN KEY (ingredient) REFERENCES Ingredient(id),
+    FOREIGN KEY (taco) REFERENCES Taco(id)
 );
-
-CREATE TABLE IF NOT EXISTS Ingredient (
-    id VARCHAR(4) NOT NULL,
-    name VARCHAR(25) NOT NULL,
-    type VARCHAR(10) NOT NULL,
-);
-
-ALTER TABLE Taco
-    ADD FOREIGN KEY(taco_order) REFERENCES Taco_Order(id);
-
- ALTER TABLE Ingredient_Ref
-    ADD FOREIGN KEY(ingredient) REFERENCES Ingredient(id);
